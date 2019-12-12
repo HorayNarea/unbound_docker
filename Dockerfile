@@ -1,12 +1,15 @@
 FROM alpine:3.10
 
 RUN apk add --no-cache \
-  && apk add --no-cache unbound curl bind-tools \
-  && curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache \
-  && chown root:unbound /etc/unbound \
-  && chmod 775 /etc/unbound \
-  && apk del --no-cache curl \
-  && /usr/sbin/unbound-anchor -a /etc/unbound/trusted-key.key | true
+  bind-tools \
+  ca-certificates \
+  curl \
+  unbound && \
+  curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache && \
+  chown root:unbound /etc/unbound && \
+  chmod 775 /etc/unbound && \
+  apk del --no-cache curl && \
+  /usr/sbin/unbound-anchor -a /etc/unbound/trusted-key.key | true
 
 COPY unbound.conf /etc/unbound/unbound.conf
 
