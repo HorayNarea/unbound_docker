@@ -1,4 +1,5 @@
 FROM alpine:3.10
+LABEL maintainer "Thomas Sänger <thomas@gecko.space>"
 
 RUN apk add --no-cache \
   bind-tools \
