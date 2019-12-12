@@ -13,6 +13,10 @@ RUN apk add --no-cache \
   /usr/sbin/unbound-anchor -a /etc/unbound/trusted-key.key | true
 
 COPY unbound.conf /etc/unbound/unbound.conf
+COPY dump-cache.sh /usr/bin/dump-cache
+COPY load-cache.sh /usr/bin/load-cache
+
+VOLUME /cache
 
 EXPOSE 53/udp 53/tcp
 
