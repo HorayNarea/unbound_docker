@@ -1,11 +1,11 @@
-FROM alpine:3.11
+FROM alpine:3.12
 LABEL maintainer "Thomas Sänger <thomas@gecko.space>"
 
 RUN apk add --no-cache \
-  bind-tools \
-  ca-certificates \
-  curl \
-  unbound && \
+    bind-tools \
+    ca-certificates \
+    curl \
+    unbound && \
   curl -o /etc/unbound/root.hints https://www.internic.net/domain/named.cache && \
   chown root:unbound /etc/unbound && \
   chmod 775 /etc/unbound && \
