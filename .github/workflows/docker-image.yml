@@ -1,0 +1,67 @@
+name: Docker Image CI
+
+on:
+  schedule:
+    - cron: "37 0 * * 1"
+  push:
+    branches:
+      - main
+      - master
+
+env:
+  DOCKER_BUILDKIT: 1
+
+jobs:
+  build_unbound:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Create folder for images
+        run: |
+          sudo mkdir -p /images
+          sudo chmod 777 /images
+
+      - name: Build image
+        run: docker build -t horaynarea/unbound_docker:latest .
+
+      - name: Save image
+        run: docker save horaynarea/unbound_docker -o /images/unbound.tar.gz
+
+      - name: Cache image
+        uses: actions/cache@v2
+        with:
+          path: /images/unbound.tar.gz
+          key: ${{ github.run_id }}-${{ github.run_number }}-unbound
+
+  push_images:
+    needs: build_unbound
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Create folder for images
+        run: |
+          sudo mkdir -p /images
+          sudo chmod 777 /images
+
+      - name: Load unbound cache
+        uses: actions/cache@v2
+        with:
+          path: /images/unbound.tar.gz
+          key: ${{ github.run_id }}-${{ github.run_number }}-unbound
+
+      - name: Load docker images
+        run: |
+          docker load -i /images/unbound.tar.gz
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push images
+        run: docker push horaynarea/unbound_docker:latest
