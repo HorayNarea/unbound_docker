@@ -19,7 +19,7 @@ COPY load-cache.sh /usr/bin/load-cache
 
 VOLUME /cache
 
-EXPOSE 53/udp 53/tcp 853/tcp
+EXPOSE 53/udp 53/tcp
 
 CMD /usr/sbin/unbound -c /etc/unbound/unbound.conf
 
