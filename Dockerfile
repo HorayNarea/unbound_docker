@@ -1,4 +1,4 @@
-FROM alpine:3.18
+FROM alpine:3.19
 LABEL maintainer "Thomas Sänger <thomas@gecko.space>"
 
 RUN apk add --no-cache \
